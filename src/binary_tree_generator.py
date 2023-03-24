@@ -3,6 +3,7 @@ import string
 
 from config import FUNCTION_SET
 from node import Node
+from tree_util import get_tree_depth
 
 
 class BinaryTreeGenerator:
@@ -12,14 +13,6 @@ class BinaryTreeGenerator:
 
         self._terminal_set: [str] = terminal_set
         self._function_set: [str] = FUNCTION_SET
-
-    def get_tree_depth(self, node: Node) -> int:
-        if node is None:
-            return 0
-
-        left_depth: int = self.get_tree_depth(node.left)
-        right_depth: int = self.get_tree_depth(node.right)
-        return 1 + max(left_depth, right_depth)
 
     def full(self, depth: int) -> Node:
         if depth > 1:
@@ -41,6 +34,6 @@ class BinaryTreeGenerator:
             return self.full(depth)
         else:
             tree = self.grow(depth)
-            while self.get_tree_depth(tree) != depth:
+            while get_tree_depth(tree) != depth:
                 tree = self.grow(depth)
             return tree

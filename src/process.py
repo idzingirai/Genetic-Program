@@ -5,7 +5,6 @@ from sklearn.feature_selection import RFE
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MinMaxScaler
 
 from config import *
 
@@ -16,6 +15,7 @@ class DataProcessor:
         self._yTrain = None
         self._xTest = None
         self._yTest = None
+        self.features = None
 
     def process(self):
         #   Read in the dataset into pandas dataframe
@@ -30,13 +30,14 @@ class DataProcessor:
             except FileNotFoundError:
                 polar_df = pl.read_csv(source=os.getcwd() + "/src/For_modeling.csv", dtypes=DTYPES).drop('')
 
-        polar_df = polar_df.sample(SAMPLE_SIZE)
+        polar_df = polar_df.drop_nulls()
+        polar_df = polar_df.sample(5000)
         pandas_df = polar_df.to_pandas()
 
         #   Remove outliers
         df = pandas_df.drop('Duration', axis=1)
         z_scores = stats.zscore(df)
-        threshold = 3
+        threshold = 2
         outliers = (abs(z_scores) > threshold).any(axis=1)
         pandas_df = pandas_df[~outliers]
 
@@ -46,10 +47,6 @@ class DataProcessor:
 
         #  Split the data into train and test sets
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=TEST_SIZE, random_state=RANDOM_STATE)
-
-        #   Normalize the data
-        scaler = MinMaxScaler()
-        x_train_norm = scaler.fit_transform(x_train)
 
         #   Get selected features from dataset
         lr = LinearRegression()
@@ -64,11 +61,10 @@ class DataProcessor:
         }
 
         grid = GridSearchCV(pipe, param_grid=parameters, cv=10, n_jobs=-1)
-        grid.fit(x_train_norm, y_train)
+        grid.fit(x_train, y_train)
 
         print(grid.best_params_)
         print(grid.best_score_)
-        print(grid.best_estimator_.named_steps['rfe'].support_)
 
         #   Get feature names from the best model
         selected_features = x_train.columns[grid.best_estimator_.named_steps['rfe'].support_]

@@ -35,7 +35,7 @@ def evaluate_postfix_string(row, expression):
     alphabet = list(string.ascii_lowercase)
 
     for token in tokens:
-        if token in ['+', '-', '*']:
+        if token in ['+', '-', '*', '/']:
             b = stack.pop()
             a = stack.pop()
 
@@ -45,6 +45,11 @@ def evaluate_postfix_string(row, expression):
                 result = a * b
             elif token == '-':
                 result = a - b
+            elif token == '/':
+                if b == 0:
+                    result = 0
+                else:
+                    result = a / b
 
             stack.append(result)
 
