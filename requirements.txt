@@ -1,0 +1,8 @@
+pandas
+matplotlib
+scikit-learn
+scipy
+polars
+pyarrow
+numpy
+numba
