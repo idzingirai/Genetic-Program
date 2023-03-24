@@ -1,8 +1,8 @@
 import random
 import string
 
-from tree.config import FUNCTION_SET
-from tree.node import Node
+from config import FUNCTION_SET
+from node import Node
 
 
 class BinaryTreeGenerator:

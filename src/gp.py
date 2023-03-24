@@ -4,10 +4,10 @@ from collections import deque
 from typing import Optional
 
 
-from .config import *
-from .eval import *
-from tree.binary_tree_generator import BinaryTreeGenerator
-from tree.node import Node
+from config import *
+from eval import *
+from binary_tree_generator import BinaryTreeGenerator
+from node import Node
 
 
 def generate_initial_population(tree_generator: BinaryTreeGenerator) -> [Node]:

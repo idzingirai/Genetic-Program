@@ -1,7 +1,7 @@
 import time
 
-from data.process import DataProcessor
-from genetic_program.gp import *
+from process import DataProcessor
+from gp import *
 
 random.seed(1)
 

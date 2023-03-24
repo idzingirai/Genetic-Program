@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 
-from .config import *
+from config import *
 
 
 class DataProcessor:
@@ -19,10 +19,16 @@ class DataProcessor:
 
     def process(self):
         #   Read in the dataset into pandas dataframe
-        try:
-            polar_df = pl.read_csv(source=os.getcwd() + "\src\data\For_modeling.csv", dtypes=DTYPES).drop('')
-        except FileNotFoundError:
-            polar_df = pl.read_csv(source=os.getcwd() + "\data\For_modeling.csv", dtypes=DTYPES).drop('')
+        if os.name == 'nt':
+            try:
+                polar_df = pl.read_csv(source=os.getcwd() + "\src\For_modeling.csv", dtypes=DTYPES).drop('')
+            except FileNotFoundError:
+                polar_df = pl.read_csv(source=os.getcwd() + "\For_modeling.csv", dtypes=DTYPES).drop('')
+        else:
+            try:
+                polar_df = pl.read_csv(source=os.getcwd() + "/For_modeling.csv", dtypes=DTYPES).drop('')
+            except FileNotFoundError:
+                polar_df = pl.read_csv(source=os.getcwd() + "/src/For_modeling.csv", dtypes=DTYPES).drop('')
 
         polar_df = polar_df.sample(SAMPLE_SIZE)
         pandas_df = polar_df.to_pandas()
