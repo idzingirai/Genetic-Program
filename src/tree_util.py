@@ -13,7 +13,7 @@ def get_tree_depth(node: Node) -> int:
     return 1 + max(left_depth, right_depth)
 
 
-def get_number_of_nodes(root):
+def get_number_of_nodes(root: Node) -> int:
     if root is None:
         return 0
     else:
@@ -34,12 +34,15 @@ def get_node_level_by_index(root: Node, index: int) -> int:
         if node.left:
             queue.append((node.left, current_level + 1))
             count += 1
+
         if count == index:
             level = current_level + 1
             return level
+
         if node.right:
             queue.append((node.right, current_level + 1))
             count += 1
+
         if count == index:
             level = current_level + 1
             return level
@@ -47,7 +50,7 @@ def get_node_level_by_index(root: Node, index: int) -> int:
     return -1
 
 
-def get_node_by_index(root, index):
+def get_node_by_index(root: Node, index: int) -> Optional[Node]:
     if root is None:
         return None
 
@@ -58,17 +61,24 @@ def get_node_by_index(root, index):
 
     while current_level:
         node = current_level[level_index]
+
         if level_index == index:
             return node
+
         if node.left is not None:
             left_index = 2 * level_index + 1
+
             if left_index <= max_index:
                 current_level.append(node.left)
+
         if node.right is not None:
             right_index = 2 * level_index + 2
+
             if right_index <= max_index:
                 current_level.append(node.right)
+
         level_index += 1
+
         if level_index == len(current_level):
             current_level = current_level[level_index:]
             level_index = 0
@@ -97,9 +107,3 @@ def copy_tree(root: Node) -> Optional[Node]:
     del queue
     return new_root
 
-
-def print_tree(node, level=0):
-    if node is not None:
-        print_tree(node.left, level + 1)
-        print(' ' * 4 * level + '-> ' + str(node.value))
-        print_tree(node.right, level + 1)

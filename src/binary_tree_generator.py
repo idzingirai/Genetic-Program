@@ -8,11 +8,11 @@ from tree_util import get_tree_depth
 
 class BinaryTreeGenerator:
     def __init__(self, length_of_terminal_set: int):
-        terminal_set: [str] = list(string.ascii_lowercase)
+        terminal_set: list = list(string.ascii_lowercase)
         del terminal_set[length_of_terminal_set:]
 
-        self._terminal_set: [str] = terminal_set
-        self._function_set: [str] = FUNCTION_SET
+        self._terminal_set: list = terminal_set
+        self._function_set: list = FUNCTION_SET
 
     def full(self, depth: int) -> Node:
         if depth > 1:
