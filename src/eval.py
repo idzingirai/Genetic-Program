@@ -1,11 +1,11 @@
 import string
-
-import numba as nb
 import numpy as np
-from numba import types
+from numba import types, njit, typed
+
+from node import Node
 
 
-def convert_tree_to_postfix_string(root) -> str:
+def convert_tree_to_postfix_string(root: Node) -> str:
     stack = []
     postfix = []
 
@@ -33,15 +33,15 @@ def convert_tree_to_postfix_string(root) -> str:
     return ' '.join(postfix)
 
 
-@nb.njit
+@njit
 def evaluate_postfix_string(row, expression):
     tokens = expression.split()
-    stack = nb.typed.List.empty_list(types.float64)
+    stack = typed.List.empty_list(types.float64)
     row = row.astype(np.float32)
     alphabet = list(string.ascii_lowercase)
 
     for token in tokens:
-        if token in ['+', '-', '*', '/']:
+        if token in ['+', '-', '*', '/', "sqrt"]:
             b = stack.pop()
             a = stack.pop()
 
@@ -56,6 +56,8 @@ def evaluate_postfix_string(row, expression):
                     result = 1
                 else:
                     result = a / b
+            elif token == 'sqrt':
+                result = np.sqrt(abs(a))
 
             stack.append(result)
 
@@ -63,4 +65,4 @@ def evaluate_postfix_string(row, expression):
             value: float = float(row[alphabet.index(token)])
             stack.append(abs(value))
 
-    return stack.pop()
+    return np.sqrt(abs(stack.pop()))

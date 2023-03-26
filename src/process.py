@@ -1,14 +1,11 @@
 import os
-
-import pandas as pd
 import polars as pl
 
 from scipy import stats
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_selection import SelectKBest, f_regression
 
-from config import TEST_SIZE, RANDOM_STATE, TARGET_VARIABLE, NUM_OF_FEATURES
+from config import TEST_SIZE, RANDOM_STATE, TARGET_VARIABLE, NUM_OF_FEATURES, SAMPLE_SIZE
 
 
 class DataProcessor:
@@ -30,9 +27,7 @@ class DataProcessor:
                 polar_df = pl.read_csv(os.path.join(os.getcwd(), "src/", 'For_modeling.csv')).drop('')
 
         polar_df = polar_df.drop_nulls()
-
-        sample_size = 3000
-        polar_df = polar_df.sample(sample_size, with_replacement=True)
+        polar_df = polar_df.sample(SAMPLE_SIZE, with_replacement=True)
 
         self.df = polar_df.to_pandas()
 
@@ -42,11 +37,6 @@ class DataProcessor:
         threshold = 2
         outliers = (abs(z_scores) > threshold).any(axis=1)
         self.df = self.df[~outliers]
-
-    def normalize_features(self) -> None:
-        scaler = MinMaxScaler()
-        x_normalized = scaler.fit_transform(self.x)
-        self.x = pd.DataFrame(x_normalized, columns=self.x.columns)
 
     def feature_selection(self) -> None:
         selector = SelectKBest(f_regression, k=NUM_OF_FEATURES)
@@ -62,7 +52,6 @@ class DataProcessor:
         self.x = self.df.drop(TARGET_VARIABLE, axis=1)
         self.y = self.df[TARGET_VARIABLE]
 
-        self.normalize_features()
         self.feature_selection()
 
     def get_data(self) -> tuple:

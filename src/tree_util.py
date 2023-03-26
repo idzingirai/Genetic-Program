@@ -107,3 +107,20 @@ def copy_tree(root: Node) -> Optional[Node]:
     del queue
     return new_root
 
+
+def print_tree(root: Node) -> None:
+    if root is None:
+        return
+
+    queue = deque([root])
+    while queue:
+        node = queue.popleft()
+        print(node.value, end=' ')
+
+        if node.left:
+            queue.append(node.left)
+
+        if node.right:
+            queue.append(node.right)
+
+    print()

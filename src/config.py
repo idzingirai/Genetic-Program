@@ -1,5 +1,7 @@
 RANDOM_STATE = 42
 
+SAMPLE_SIZE = 3000000
+
 TARGET_VARIABLE = 'Duration'
 
 NUM_OF_FEATURES = 10
@@ -20,4 +22,4 @@ CROSSOVER_RATE = 0.8
 
 MUTATION_RATE = 0.4
 
-FUNCTION_SET = ['+', '-', '/']
+FUNCTION_SET = ['+', '-', '/', '*', 'sqrt']

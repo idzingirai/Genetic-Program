@@ -6,7 +6,7 @@ from process import DataProcessor
 from tree_util import copy_tree
 
 if __name__ == "__main__":
-    random.seed(91)
+    random.seed(999)
     start_time = time.time()
 
     processor = DataProcessor()
@@ -25,7 +25,9 @@ if __name__ == "__main__":
     calculate_fitness(best_tree, x_train, y_train)
 
     num_of_generations = 0
-    while num_of_generations < 500:
+    num_of_generations_without_improvement = 0
+
+    while num_of_generations < 100:
         first_tree = tournament_selection(population, TOURNAMENT_SIZE)
         second_tree = tournament_selection(population, TOURNAMENT_SIZE)
 
@@ -52,11 +54,23 @@ if __name__ == "__main__":
         if population[0].fitness < best_tree.fitness:
             best_tree = copy_tree(population[0])
             calculate_fitness(best_tree, x_train, y_train)
+            num_of_generations_without_improvement = 0
+        else:
+            num_of_generations_without_improvement += 1
 
+        if num_of_generations_without_improvement == 5:
+            new_population = generate_initial_population(tree_generator)
+            for tree in new_population:
+                calculate_fitness(tree, x_train, y_train)
+
+            population.extend(new_population)
+            population.sort(key=lambda t: t.fitness)
+
+            del population[100:]
+        print(f"Generation {num_of_generations}")
         num_of_generations += 1
 
-
-print("[] Best Program After Training Fitness (Mean Absolute Percentage Error): " + str(best_tree.fitness) + "%\n")
-calculate_fitness(best_tree, x_test, y_test)
-print("[] Best Program After Testing Fitness (Mean Absolute Percentage Error): " + str(best_tree.fitness) + "%\n")
-print("[] Time Elapsed: " + str(time.time() - start_time) + " seconds")
+    print("[] Best Program After Training Fitness (Mean Absolute Percentage Error): " + str(best_tree.fitness) + "%\n")
+    calculate_fitness(best_tree, x_test, y_test)
+    print("[] Best Program After Testing Fitness (Mean Absolute Percentage Error): " + str(best_tree.fitness) + "%\n")
+    print("[] Time Elapsed: " + str(time.time() - start_time) + " seconds")
