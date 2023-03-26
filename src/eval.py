@@ -53,7 +53,7 @@ def evaluate_postfix_string(row, expression):
                 result = a - b
             elif token == '/':
                 if b == 0:
-                    result = 1
+                    result = 0
                 else:
                     result = a / b
             elif token == 'sqrt':
@@ -65,4 +65,4 @@ def evaluate_postfix_string(row, expression):
             value: float = float(row[alphabet.index(token)])
             stack.append(abs(value))
 
-    return np.sqrt(abs(stack.pop()))
+    return abs(stack.pop())

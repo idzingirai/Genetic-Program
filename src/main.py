@@ -6,7 +6,7 @@ from process import DataProcessor
 from tree_util import copy_tree
 
 if __name__ == "__main__":
-    random.seed(999)
+    random.seed(99)
     start_time = time.time()
 
     processor = DataProcessor()
@@ -67,10 +67,9 @@ if __name__ == "__main__":
             population.sort(key=lambda t: t.fitness)
 
             del population[100:]
-        print(f"Generation {num_of_generations}")
         num_of_generations += 1
 
-    print("[] Best Program After Training Fitness (Mean Absolute Percentage Error): " + str(best_tree.fitness) + "%\n")
+    print("[] Best Program After Training Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "%\n")
     calculate_fitness(best_tree, x_test, y_test)
-    print("[] Best Program After Testing Fitness (Mean Absolute Percentage Error): " + str(best_tree.fitness) + "%\n")
+    print("[] Best Program After Testing Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "%\n")
     print("[] Time Elapsed: " + str(time.time() - start_time) + " seconds")

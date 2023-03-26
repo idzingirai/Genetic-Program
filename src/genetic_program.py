@@ -1,4 +1,5 @@
 import pandas
+from sklearn.metrics import mean_squared_error
 
 from config import INITIAL_TREE_DEPTH, POPULATION_SIZE, TREE_GENERATION_METHOD, MAX_TREE_DEPTH
 from binary_tree_generator import *
@@ -33,7 +34,7 @@ def calculate_fitness(tree: Node, x_data: pandas.DataFrame, y_data: pandas.Serie
 
     fitness_evaluation = lambda row, expression: evaluate_postfix_string(row, expression)
     y_pred = np.apply_along_axis(fitness_evaluation, axis=1, arr=x_data, expression=tree_postfix_expression)
-    tree.fitness = np.sqrt((1 / x_data.size) * np.sum(np.power(y - y_pred, 2)))
+    tree.fitness = np.sqrt(mean_squared_error(y, y_pred))
 
 
 def tournament_selection(population: [Node], tournament_size: int) -> Node:
