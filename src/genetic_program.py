@@ -1,7 +1,7 @@
 import pandas
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error, r2_score
 
-from config import INITIAL_TREE_DEPTH, POPULATION_SIZE, TREE_GENERATION_METHOD, MAX_TREE_DEPTH
+from config import *
 from binary_tree_generator import *
 from eval import *
 from tree_util import *
@@ -34,7 +34,15 @@ def calculate_fitness(tree: Node, x_data: pandas.DataFrame, y_data: pandas.Serie
 
     fitness_evaluation = lambda row, expression: evaluate_postfix_string(row, expression)
     y_pred = np.apply_along_axis(fitness_evaluation, axis=1, arr=x_data, expression=tree_postfix_expression)
-    tree.fitness = np.sqrt(mean_squared_error(y, y_pred))
+
+    if FITNESS_FUNCTION == 'RMSE':
+        tree.fitness = np.sqrt(mean_squared_error(y, y_pred))
+    elif FITNESS_FUNCTION == 'R2':
+        tree.fitness = r2_score(y, y_pred)
+    elif FITNESS_FUNCTION == 'MAE':
+        tree.fitness = mean_absolute_error(y, y_pred)
+    elif FITNESS_FUNCTION == 'MedAE':
+        tree.fitness = median_absolute_error(y, y_pred)
 
 
 def tournament_selection(population: [Node], tournament_size: int) -> Node:

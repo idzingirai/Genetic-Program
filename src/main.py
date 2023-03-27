@@ -1,12 +1,11 @@
 import time
 
-from config import CROSSOVER_RATE, MUTATION_RATE, TOURNAMENT_SIZE
 from genetic_program import *
 from process import DataProcessor
 from tree_util import copy_tree
 
 if __name__ == "__main__":
-    random.seed(99)
+    random.seed(SEED)
     start_time = time.time()
 
     processor = DataProcessor()
@@ -51,12 +50,20 @@ if __name__ == "__main__":
         population.pop()
         population.pop()
 
-        if population[0].fitness < best_tree.fitness:
-            best_tree = copy_tree(population[0])
-            calculate_fitness(best_tree, x_train, y_train)
-            num_of_generations_without_improvement = 0
+        if FITNESS_FUNCTION == 'R2':
+            if population[0].fitness > best_tree.fitness:
+                best_tree = copy_tree(population[0])
+                calculate_fitness(best_tree, x_train, y_train)
+                num_of_generations_without_improvement = 0
+            else:
+                num_of_generations_without_improvement += 1
         else:
-            num_of_generations_without_improvement += 1
+            if population[0].fitness < best_tree.fitness:
+                best_tree = copy_tree(population[0])
+                calculate_fitness(best_tree, x_train, y_train)
+                num_of_generations_without_improvement = 0
+            else:
+                num_of_generations_without_improvement += 1
 
         if num_of_generations_without_improvement == 5:
             new_population = generate_initial_population(tree_generator)
@@ -69,7 +76,7 @@ if __name__ == "__main__":
             del population[100:]
         num_of_generations += 1
 
-    print("[] Best Program After Training Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "%\n")
+    print("[] Best Program After Training Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "\n")
     calculate_fitness(best_tree, x_test, y_test)
-    print("[] Best Program After Testing Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "%\n")
+    print("[] Best Program After Testing Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "\n")
     print("[] Time Elapsed: " + str(time.time() - start_time) + " seconds")
