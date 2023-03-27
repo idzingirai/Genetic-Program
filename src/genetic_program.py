@@ -1,5 +1,5 @@
 import pandas
-from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error
 
 from config import *
 from binary_tree_generator import *
@@ -37,10 +37,6 @@ def calculate_fitness(tree: Node, x_data: pandas.DataFrame, y_data: pandas.Serie
 
     if FITNESS_FUNCTION == 'RMSE':
         tree.fitness = np.sqrt(mean_squared_error(y, y_pred))
-    elif FITNESS_FUNCTION == 'R2':
-        ssres = np.sum(np.square(y - y_pred))
-        sstot = np.sum(np.square(y - np.mean(y)))
-        tree.fitness = 1 - (ssres / sstot)
     elif FITNESS_FUNCTION == 'MAE':
         tree.fitness = mean_absolute_error(y, y_pred)
     elif FITNESS_FUNCTION == 'MedAE':

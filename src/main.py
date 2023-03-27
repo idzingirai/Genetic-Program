@@ -12,6 +12,7 @@ if __name__ == "__main__":
     processor.process()
     x_train, x_test, y_train, y_test = processor.get_data()
     features = processor.get_features()
+    print(f"[] Features: {features}\n")
 
     tree_generator = BinaryTreeGenerator(length_of_terminal_set=len(features))
     population = generate_initial_population(tree_generator)
@@ -26,7 +27,7 @@ if __name__ == "__main__":
     num_of_generations = 0
     num_of_generations_without_improvement = 0
 
-    while num_of_generations < 100:
+    while num_of_generations < MAX_GENERATIONS:
         first_tree = tournament_selection(population, TOURNAMENT_SIZE)
         second_tree = tournament_selection(population, TOURNAMENT_SIZE)
 
@@ -50,20 +51,12 @@ if __name__ == "__main__":
         population.pop()
         population.pop()
 
-        if FITNESS_FUNCTION == 'R2':
-            if population[0].fitness > best_tree.fitness:
-                best_tree = copy_tree(population[0])
-                calculate_fitness(best_tree, x_train, y_train)
-                num_of_generations_without_improvement = 0
-            else:
-                num_of_generations_without_improvement += 1
+        if population[0].fitness < best_tree.fitness:
+            best_tree = copy_tree(population[0])
+            calculate_fitness(best_tree, x_train, y_train)
+            num_of_generations_without_improvement = 0
         else:
-            if population[0].fitness < best_tree.fitness:
-                best_tree = copy_tree(population[0])
-                calculate_fitness(best_tree, x_train, y_train)
-                num_of_generations_without_improvement = 0
-            else:
-                num_of_generations_without_improvement += 1
+            num_of_generations_without_improvement += 1
 
         if num_of_generations_without_improvement == 5:
             new_population = generate_initial_population(tree_generator)
@@ -76,7 +69,8 @@ if __name__ == "__main__":
             del population[100:]
         num_of_generations += 1
 
-    print(f"[] Best Program After Training Fitness {FITNESS_FUNCTION}: " + str(best_tree.fitness) + "\n")
+    print(f"[] Best Program After Training Fitness {FITNESS_FUNCTION}: " + str(round(best_tree.fitness, 4)) + "\n")
     calculate_fitness(best_tree, x_test, y_test)
-    print(f"[] Best Program After Testing Fitness {FITNESS_FUNCTION}: " + str(best_tree.fitness) + "\n")
-    print("[] Time Elapsed: " + str(time.time() - start_time) + " seconds")
+    print(f"[] Best Program After Testing Fitness {FITNESS_FUNCTION}: " + str(round(best_tree.fitness, 4)) + "\n")
+    print(f"[] Equation In Postfix Notation: ", convert_tree_to_postfix_string(best_tree))
+    print("\n[] Time Elapsed: " + str(time.time() - start_time) + " seconds")
