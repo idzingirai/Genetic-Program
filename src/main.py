@@ -76,7 +76,7 @@ if __name__ == "__main__":
             del population[100:]
         num_of_generations += 1
 
-    print("[] Best Program After Training Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "\n")
+    print(f"[] Best Program After Training Fitness {FITNESS_FUNCTION}: " + str(best_tree.fitness) + "\n")
     calculate_fitness(best_tree, x_test, y_test)
-    print("[] Best Program After Testing Fitness (Mean Absolute Error): " + str(best_tree.fitness) + "\n")
+    print(f"[] Best Program After Testing Fitness {FITNESS_FUNCTION}: " + str(best_tree.fitness) + "\n")
     print("[] Time Elapsed: " + str(time.time() - start_time) + " seconds")

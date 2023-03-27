@@ -26,4 +26,4 @@ MUTATION_RATE = 0.4
 
 FUNCTION_SET = ['+', '-', '/', '*', 'sqrt']
 
-FITNESS_FUNCTION = 'R2'
+FITNESS_FUNCTION = 'MedAE'

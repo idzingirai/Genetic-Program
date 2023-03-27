@@ -38,7 +38,9 @@ def calculate_fitness(tree: Node, x_data: pandas.DataFrame, y_data: pandas.Serie
     if FITNESS_FUNCTION == 'RMSE':
         tree.fitness = np.sqrt(mean_squared_error(y, y_pred))
     elif FITNESS_FUNCTION == 'R2':
-        tree.fitness = r2_score(y, y_pred)
+        ssres = np.sum(np.square(y - y_pred))
+        sstot = np.sum(np.square(y - np.mean(y)))
+        tree.fitness = 1 - (ssres / sstot)
     elif FITNESS_FUNCTION == 'MAE':
         tree.fitness = mean_absolute_error(y, y_pred)
     elif FITNESS_FUNCTION == 'MedAE':
